@@ -8,6 +8,7 @@ import traceback
 logger = setup_logger()
 
 class UserBehavior(HttpUser):
+    host = BASE_URL
     wait_time = between(1, 3)
 
     def log_response(self, method, url, response, payload=None):

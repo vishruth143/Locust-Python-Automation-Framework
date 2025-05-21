@@ -1,0 +1,40 @@
+name: Locust Performance Test CI
+
+on:
+  push:
+    paths:
+      - 'config/**'
+      - 'tasks/**'
+      - 'utils/**'
+      - 'Dockerfile'
+    branches:
+      - '**'
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-locust:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker build -t locust-performance-framework .
+
+      - name: Run Locust tests
+        run: |
+          mkdir reports
+          docker run --rm -v ${{ github.workspace }}/reports:/app/reports locust-performance-framework
+
+      - name: Upload Locust Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: locust-report
+          path: reports/report.html
