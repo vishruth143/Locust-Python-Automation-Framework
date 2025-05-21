@@ -4,8 +4,9 @@ on:
   push:
     paths:
       - 'config/**'
-      - '../../users/**'
-      - '../../utilities/**'
+      - 'scenarios/**'
+      - 'users/**'
+      - 'utilities/**'
       - 'Dockerfile'
     branches:
       - '**'
