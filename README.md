@@ -71,15 +71,15 @@ Lists all Python dependencies required to run the framework and tests.
 ---
 ## 🔹 To generate html report
 ```bash
-  locust -f locustfile.py --headless -u 1 -r 1 -t 1m --html=reports/report.html
+  locust -f locustfile.py --headless -u 10 -r 2 -t 1m --html=reports/report.html
 ```
 ---
-| **Part**             | **Meaning**                                                                                                                   |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `locust`             | This is the command to start Locust.                                                                                          |
-| `-f locustfile.py`   | Specifies the file that contains your Locust user class and tasks (in this case, `locustfile.py`).                            |
-| `--headless`         | Runs the test without the web UI (ideal for automation, CI/CD, or terminal-only usage).                                       |
-| `-u 10`              | Sets the number of total users (virtual users) to simulate = **10 users**.                                                    |
-| `-r 2`               | Sets the spawn rate = how many users to start **per second**. Here, it starts 2 users every second until it reaches 10 users. |
-| `-t 1m`              | Duration of the test = **1 minute**. After 1 minute, the test stops automatically.                                            |
-| `--html=report.html` | Generates an HTML report after the test finishes and saves it as `report.html`.                                               |
+| **Part**                     | **Meaning**                                                                                                                   |
+|------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `locust`                     | This is the command to start Locust.                                                                                          |
+| `-f locustfile.py`           | Specifies the file that contains your Locust user class and tasks (in this case, `locustfile.py`).                            |
+| `--headless`                 | Runs the test without the web UI (ideal for automation, CI/CD, or terminal-only usage).                                       |
+| `-u 2`                       | Sets the number of total users (virtual users) to simulate = **10 users**.                                                    |
+| `-r 2`                       | Sets the spawn rate = how many users to start **per second**. Here, it starts 2 users every second until it reaches 10 users. |
+| `-t 1m`                      | Duration of the test = **1 minute**. After 1 minute, the test stops automatically.                                            |
+| `--html=reports/report.html` | Generates an HTML report after the test finishes and saves it as `reports/report.html`.                                       |
