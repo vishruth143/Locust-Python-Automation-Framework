@@ -9,7 +9,7 @@ from utilities.common import log_response
 
 logger = setup_logger()
 
-class JsonPlaceholder(TaskSet):
+class JsonPlaceholderUserTaskset(TaskSet):
 
     @task(2)
     # This will run roughly 3× as often
@@ -46,8 +46,8 @@ class JsonPlaceholder(TaskSet):
         except Exception as e:
             logger.exception(f"Exception in create_post:\n{traceback.format_exc()}")
 
-class JsonPlaceholderUserClass(HttpUser):
+class JsonPlaceholderUserTaskSetUserClass(HttpUser):
     host = JSON_PLACEHOLDER_BASE_URL
     wait_time = constant(DEFAULT_THINK_TIME)
     # wait_time = between(1, 3)
-    tasks = [JsonPlaceholder]
+    tasks = [JsonPlaceholderUserTaskset]

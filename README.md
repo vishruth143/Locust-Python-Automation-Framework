@@ -71,7 +71,7 @@ Lists all Python dependencies required to run the framework and tests.
 ---
 ## 🔹 To generate html report
 ```bash
-  locust -f locustfile.py --headless -u 10 -r 2 -t 1m --html=reports/report.html
+  locust -f locustfile.py --headless -u 3 -r 3 -t 1m --html=reports/report.html
 ```
 ---
 | **Part**                     | **Meaning**                                                                                                                   |
