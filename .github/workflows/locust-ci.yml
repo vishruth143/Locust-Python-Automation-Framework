@@ -8,6 +8,7 @@ on:
       - 'users/**'
       - 'utilities/**'
       - 'Dockerfile'
+      - 'locustfile.py'
     branches:
       - '**'
 
