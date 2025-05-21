@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 8089
 
 # Default command to run Locust in headless mode with your params
-CMD ["locust", "-f", "locustfile.py", "--headless", "-u", "10", "-r", "2", "-t", "1m", "--html=reports/report.html"]
+CMD ["locust", "-f", "locustfile.py", "--headless", "-u", "3", "-r", "3", "-t", "1m", "--html=reports/report.html"]
