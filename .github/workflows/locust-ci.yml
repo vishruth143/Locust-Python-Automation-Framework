@@ -5,7 +5,7 @@ on:
     paths:
       - 'config/**'
       - 'tasks/**'
-      - 'utils/**'
+      - '../../utilities/**'
       - 'Dockerfile'
     branches:
       - '**'
