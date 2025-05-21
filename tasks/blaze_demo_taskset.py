@@ -17,7 +17,7 @@ class BlazeDemo(TaskSet):
     def search_flights(self):
         url = f"{BLAZEDEMO_BASE_URL}/"
         try:
-            response = self.client.get(url, headers=build_headers())
+            response = self.client.get(url, headers=build_headers(), name="Search Flight")
             log_response("GET", url, response)
         except Exception as e:
             logger.exception(f"Exception in get_posts:\n{traceback.format_exc()}")

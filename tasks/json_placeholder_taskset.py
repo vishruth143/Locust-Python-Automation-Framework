@@ -16,7 +16,7 @@ class JsonPlaceholder(TaskSet):
     def get_posts(self):
         url = f"{JSON_PLACEHOLDER_BASE_URL}/posts"
         try:
-            response = self.client.get(url, headers=build_headers())
+            response = self.client.get(url, headers=build_headers(), name="Get Posts")
             log_response("GET", url, response)
         except Exception as e:
             logger.exception(f"Exception in get_posts:\n{traceback.format_exc()}")
@@ -26,14 +26,14 @@ class JsonPlaceholder(TaskSet):
     def get_post_by_id(self):
         url = f"{JSON_PLACEHOLDER_BASE_URL}/posts/1"
         try:
-            response = self.client.get(url, headers=build_headers())
+            response = self.client.get(url, headers=build_headers(), name="Get Post By ID")
             log_response("GET", url, response)
         except Exception as e:
             logger.exception(f"Exception in get_post_by_id:\n{traceback.format_exc()}")
 
     @task(1)
     # This runs with weight = 1
-    def create_post(self):
+    def create_posts(self):
         url = f"{JSON_PLACEHOLDER_BASE_URL}/posts"
         payload = {
             "title": "foo",
@@ -41,7 +41,7 @@ class JsonPlaceholder(TaskSet):
             "userId": 1
         }
         try:
-            response = self.client.post(url, json=payload, headers=build_headers())
+            response = self.client.post(url, json=payload, headers=build_headers(), name="Create Posts")
             self.log_response("POST", url, response, payload=payload)
         except Exception as e:
             logger.exception(f"Exception in create_post:\n{traceback.format_exc()}")
