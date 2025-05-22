@@ -42,7 +42,7 @@ class JsonPlaceholderUserTaskset(TaskSet):
         }
         try:
             response = self.client.post(url, json=payload, headers=build_headers(), name="Create Posts")
-            self.log_response("POST", url, response, payload=payload)
+            log_response("POST", url, response, payload=payload)
         except Exception as e:
             logger.exception(f"Exception in create_post:\n{traceback.format_exc()}")
 

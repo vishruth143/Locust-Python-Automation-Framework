@@ -83,3 +83,13 @@ Lists all Python dependencies required to run the framework and tests.
 | `-r 2`                       | Sets the spawn rate = how many users to start **per second**. Here, it starts 2 users every second until it reaches 10 users. |
 | `-t 1m`                      | Duration of the test = **1 minute**. After 1 minute, the test stops automatically.                                            |
 | `--html=reports/report.html` | Generates an HTML report after the test finishes and saves it as `reports/report.html`.                                       |
+---
+## 🔹 Distributed load generation
+### Terminal 1
+    locust -f locustfile.py --master --expect-workers=2 --headless -u 3 -r 3 -t 1m --html=reports/report.html
+### Terminal 2
+    locust -f locustfile.py --worker --master-host=127.0.0.1
+### Terminal 3
+    locust -f locustfile.py --worker --master-host=127.0.0.1
+    
+    

@@ -1,7 +1,7 @@
 from locust import HttpUser, constant, task, TaskSet
 
 from config.config import BLAZEDEMO_BASE_URL, DEFAULT_THINK_TIME
-from scenarios import booking_flow
+from scenarios import blaze_demo__booking_flow
 
 
 class BlazeDemoUserTaskSet(TaskSet):
