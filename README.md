@@ -47,7 +47,7 @@ You run: locust -f locustfile.py
               │
               ▼
    ┌─────────────────────┐
-   │    locustfile.py    │  ← Entry point: registers users & Prometheus metrics
+   │    locustfile.py    │  ← Entry point: registers users
    └────────┬────────────┘
             │ creates virtual users of type:
             ▼
@@ -222,30 +222,21 @@ class JsonPlaceholderUserTaskset(TaskSet):
 
 ### 🚀 Layer 5 — `locustfile.py` (The Entry Point)
 
-This is the file Locust reads when you run `locust -f locustfile.py`. It does two things:
+This is the file Locust reads when you run `locust -f locustfile.py`. It registers the user classes and ensures output directories exist at startup.
 
-#### 1. Registers the user classes
+#### Registers the user classes
 ```python
 user_classes = [BlazeDemoUserTaskSetUserClass, JsonPlaceholderUserTaskSetUserClass]
 ```
 Locust sees both user classes and spawns them during the test run.
 
-#### 2. Starts Prometheus metrics tracking
+#### Ensures output directories exist
 ```python
 @events.init.add_listener
 def on_locust_init(environment, **kwargs):
-    start_http_server(8000)          # exposes metrics at http://localhost:8000
-
-@events.request.add_listener
-def track_request(request_type, name, response_time, exception, **kwargs):
-    if exception is None:
-        REQUEST_COUNT.inc()          # count successes
-    else:
-        REQUEST_FAILURE_COUNT.inc()  # count failures
-    REQUEST_LATENCY.observe(response_time / 1000.0)  # record latency in seconds
+    os.makedirs("output/reports", exist_ok=True)
+    os.makedirs("output/logs", exist_ok=True)
 ```
-
-> Prometheus metrics allow external monitoring tools (like Grafana) to scrape and visualise real-time test results beyond the built-in Locust UI.
 
 ---
 
@@ -278,11 +269,7 @@ Here is exactly what happens when Locust sends one request, traced from start to
     - log_response() logs: POST https://... | Status: 200 | Request: {...} | Response: ...
     - Locust records: response time, success/failure
                                 │
-8.  locustfile.py event listener fires:
-    - REQUEST_COUNT.inc()  (or REQUEST_FAILURE_COUNT.inc() if exception)
-    - REQUEST_LATENCY.observe(response_time / 1000.0)
-                                │
-9.  User waits DEFAULT_THINK_TIME (2 seconds), then picks the next random task
+8.  User waits DEFAULT_THINK_TIME (2 seconds), then picks the next random task
 ```
 
 ---
@@ -301,7 +288,6 @@ Here is exactly what happens when Locust sends one request, traced from start to
 | Modify log format | `utilities/logger.py` |
 | Modify response logging | `utilities/common.py` |
 | Modify HTTP headers | `utilities/helpers.py` |
-| Add Prometheus metrics | `locustfile.py` |
 
 ---
 
@@ -351,7 +337,7 @@ locust -f locustfile.py
 ### 4) Run in headless mode and generate HTML report
 
 ```bash
-locust -f locustfile.py --headless -u 3 -r 3 -t 1m --html reports/report.html
+locust -f locustfile.py --headless -u 3 -r 3 -t 1m --html output/reports/report.html
 ```
 
 ---
@@ -367,11 +353,15 @@ Locust-Python-Automation-Framework/
 ├── config/                                                # Configuration files
 │   └── config.py                                          # Main config values
 │
+├── output/                                                # Generated test artifacts
+│   ├── logs/                                              # Log files
+│   │   └── locust.log                                     # Runtime log output
+│   └── reports/                                           # HTML test reports
+│       └── report.html                                    # Generated after headless run
+│
 ├── scenarios/                                             # Reusable load test flows
 │   ├── blaze_demo_flows.py                                # Blaze demo flows
 │   └── json_placeholder_flows.py                          # JSONPlaceholder API flows
-│
-├── tasks/                                                 # User task definitions
 │
 ├── users/                                                 # Locust user definitions
 │   ├── blaze_demo_user_sequential_taskset.py              # Sequential Blaze taskset user
@@ -382,8 +372,6 @@ Locust-Python-Automation-Framework/
 │   ├── common.py                                          # Common utility functions
 │   ├── helpers.py                                         # Generic helper functions
 │   └── logger.py                                          # Logging utilities
-│
-├── utils/                                                 # Additional utility modules
 │
 ├── .gitignore                                             # Git ignored files and directories
 ├── Dockerfile                                             # Container configuration
@@ -415,7 +403,7 @@ Run the following in separate terminals.
 **Terminal 1 (Master)**
 
 ```bash
-locust -f locustfile.py --master --expect-workers 2 --headless -u 3 -r 3 -t 1m --html reports/report.html
+locust -f locustfile.py --master --expect-workers 2 --headless -u 3 -r 3 -t 1m --html output/reports/report.html
 ```
 
 **Terminal 2 (Worker 1)**
@@ -445,13 +433,13 @@ locust -f locustfile.py --worker --master-host 127.0.0.1
 | `--master` | Starts Locust in master mode. |
 | `--worker` | Starts Locust as a worker node. |
 | `--expect-workers 2` | Waits for 2 workers before starting. |
-| `--html reports/report.html` | Exports HTML report for the run. |
+| `--html output/reports/report.html` | Exports HTML report for the run. |
 
 ---
 
 ## 📊 Reports
 
-- Use `--html reports/report.html` to generate an HTML report after headless execution.
+- Use `--html output/reports/report.html` to generate an HTML report after headless execution.
 - Use UI mode (`locust -f locustfile.py`) for real-time metrics and charts during test runs.
 
 ---
@@ -474,7 +462,6 @@ docker run --rm locust-framework
 | Issue | Possible Cause | Suggested Fix |
 |---|---|---|
 | `locust` command not found | Locust not installed in current environment | Run `pip install -r requirements.txt` and verify with `locust --version` |
-| Report file not generated | `reports` path missing or command not completed | Ensure the command includes `--html reports/report.html` and test run finishes |
+| Report file not generated | `output/reports` path missing or command not completed | Ensure the command includes `--html output/reports/report.html` and test run finishes |
 | Workers not connecting | Master host/port mismatch | Verify `--master-host 127.0.0.1` and active master process |
 | Port already in use | Another process uses Locust default port | Stop existing process or run Locust on a different port |
-

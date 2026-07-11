@@ -1,7 +1,7 @@
 import logging
 import os
 
-def setup_logger(name="locust-logger", log_file="logs/locust.log"):
+def setup_logger(name="locust-logger", log_file="output/logs/locust.log"):
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
     logger = logging.getLogger(name)
